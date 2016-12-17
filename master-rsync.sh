@@ -7,12 +7,25 @@ ACTION=$3
 SIZE=$4
 GO=$5
 
-SCRIPTS=${0%/*}
+# Get the real script folder.  Lifted from http://stackoverflow.com/a/12197518
+pushd . > /dev/null
+SCRIPT_PATH="${BASH_SOURCE[0]}";
+while([ -h "${SCRIPT_PATH}" ]); do
+    cd "`dirname "${SCRIPT_PATH}"`"
+    SCRIPT_PATH="$(readlink "`basename "${SCRIPT_PATH}"`")";
+done
+cd "`dirname "${SCRIPT_PATH}"`" > /dev/null
+SCRIPTPATH="`pwd`";
+popd  > /dev/null
+# echo "script=${SCRIPT_PATH}"
+# echo "pwd   =`pwd`"
+
 DEST=`echo "_"${TYPE} | awk '{print toupper($0)}'`
 
 # Report the args
 clear
-printf '$0 is: %s\n$BASH_SOURCE is: %s\n' "$0" "$BASH_SOURCE"
+printf '$0 and $BASH_SOURCE are: %s  %s\n' "$0" "$BASH_SOURCE"
+printf 'Working directory and $SCRIPTPATH are: %s  %s\n' "`pwd`" "$SCRIPTPATH"
 echo "---------------------------------------------------------------------------------"
 echo "1) File TYPE is: ${TYPE}"
 echo "2) Source directory is: ${SOURCE}"
@@ -22,7 +35,7 @@ echo "5) GO is: ${GO}"
 echo "---------------------------------------------------------------------------------"
 echo ""
 
-INC="${SCRIPTS}/${TYPE}.txt"
+INC="${SCRIPTPATH}/${TYPE}.txt"
 
 # Test for a proper ACTION.
 if [ "$ACTION" != "move" ]
@@ -74,7 +87,7 @@ echo ""
 echo "Now for the UPPERCASE file types..."
 echo ""
 
-awk '{ print toupper($0) }' $INC > ${SCRIPTS}/uppercase.tmp
-rsync $OPTIONS --progress --include='*/' --include-from=${SCRIPTS}/uppercase.tmp --exclude='*' --min-size=${SIZE} $PARM1 --prune-empty-dirs ${SOURCE} /mnt/fileserver/STORAGE/${DEST}/
+awk '{ print toupper($0) }' $INC > ${SCRIPTPATH}/uppercase.tmp
+rsync $OPTIONS --progress --include='*/' --include-from=${SCRIPTPATH}/uppercase.tmp --exclude='*' --min-size=${SIZE} $PARM1 --prune-empty-dirs ${SOURCE} /mnt/fileserver/STORAGE/${DEST}/
 
 exit 0
