@@ -1,0 +1,6 @@
+*.mp3
+*.wav
+*.au
+*.aup
+*.wma
+

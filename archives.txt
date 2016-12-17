@@ -1,0 +1,7 @@
+*.zip
+*.gz
+*.tar
+*.gzip
+*.pst
+*.7z
+

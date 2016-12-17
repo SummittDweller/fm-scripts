@@ -1,0 +1,15 @@
+*.numbers
+*.key
+*.xls
+*.xlsx
+*.doc
+*.docx
+*.pdf
+*.txt
+*.ppt
+*.pptx
+*.pages
+*.pub
+*.vsd
+
+

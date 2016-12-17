@@ -1,0 +1,14 @@
+*.mp4
+*.avi
+*.ogg
+*.ogv
+*.mov
+*.qt
+*.wmv
+*.mpg
+*.mpeg
+*.mp2
+*.m4v
+*.flv
+*.m2ts
+
