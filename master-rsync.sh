@@ -73,21 +73,32 @@ if [ "$ACTION" = "copy" ]; then PARM1=""; fi
 if [ "$GO" = "GO!" ]; then OPTIONS="-aRruvi"; fi
 if [ "$GO" != "GO!" ]; then OPTIONS="--dry-run -aRruvi"; fi
 
+# Are we on the fileserver or is it mounted here?
+if [ -d "/files/STORAGE" ]; then
+  DROOT="/files/STORAGE"
+elsif [ -d "/mnt/fileserver/STORAGE" ]; then
+  DROOT="/mnt/fileserver/STORAGE"
+else   
+  echo "The fileserver destination root is undefined. This process is terminated."
+  echo ""
+  exit
+fi
+
 echo "This script will $ACTION the following file types (and their UPPERCASE equivalents) from "
-echo "  $SOURCE to /mnt/fileserver/STORAGE/${DEST}:"
+echo "  $SOURCE to ${DROOT}/${DEST}:"
 echo ""
 cat $INC | (while read; do echo "    $REPLY"; done)
 echo ""
 echo "Original file paths will be preserved."
 echo ""
 
-rsync $OPTIONS --relative --progress --include='*/' --include-from=${INC} --exclude='*' --min-size=${SIZE} $PARM1 --prune-empty-dirs ${SOURCE} /mnt/fileserver/STORAGE/${DEST}/
+rsync $OPTIONS --relative --progress --include='*/' --include-from=${INC} --exclude='*' --min-size=${SIZE} $PARM1 --prune-empty-dirs ${SOURCE} ${DROOT}/${DEST}/
 
 echo ""
 echo "Now for the UPPERCASE file types..."
 echo ""
 
 awk '{ print toupper($0) }' $INC > ${SCRIPTPATH}/uppercase.tmp
-rsync $OPTIONS --progress --include='*/' --include-from=${SCRIPTPATH}/uppercase.tmp --exclude='*' --min-size=${SIZE} $PARM1 --prune-empty-dirs ${SOURCE} /mnt/fileserver/STORAGE/${DEST}/
+rsync $OPTIONS --progress --include='*/' --include-from=${SCRIPTPATH}/uppercase.tmp --exclude='*' --min-size=${SIZE} $PARM1 --prune-empty-dirs ${SOURCE} ${DROOT}/${DEST}/
 
 exit 0
