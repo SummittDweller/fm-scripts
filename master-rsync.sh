@@ -76,7 +76,7 @@ if [ "$GO" != "GO!" ]; then OPTIONS="--dry-run -aRruvi"; fi
 # Are we on the fileserver or is it mounted here?
 if [ -d "/files/STORAGE" ]; then
   DROOT="/files/STORAGE"
-elsif [ -d "/mnt/fileserver/STORAGE" ]; then
+elif [ -d "/mnt/fileserver/STORAGE" ]; then
   DROOT="/mnt/fileserver/STORAGE"
 else   
   echo "The fileserver destination root is undefined. This process is terminated."
